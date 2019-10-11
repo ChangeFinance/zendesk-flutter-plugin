@@ -36,7 +36,7 @@ enum ChatRating {
 }
 
 ConnectionStatus toConnectionStatus(String value) {
-  switch(value) {
+  switch (value) {
     case 'noConnection':
     case 'NO_CONNECTION':
       return ConnectionStatus.NO_CONNECTION;
@@ -46,7 +46,7 @@ ConnectionStatus toConnectionStatus(String value) {
     case 'disconnected':
     case 'DISCONNECTED':
       return ConnectionStatus.DISCONNECTED;
-    case 'connecting' :
+    case 'connecting':
     case 'CONNECTING':
       return ConnectionStatus.CONNECTING;
     case 'connected':
@@ -58,7 +58,7 @@ ConnectionStatus toConnectionStatus(String value) {
 }
 
 AccountStatus toAccountStatus(String value) {
-  switch(value) {
+  switch (value) {
     case 'online':
     case 'ONLINE':
       return AccountStatus.ONLINE;
@@ -110,7 +110,9 @@ class AbstractModel {
 
   AbstractModel(this._id, this._attributes, [@visibleForTesting this._os]);
 
-  String get id { return _id;}
+  String get id {
+    return _id;
+  }
 
   dynamic attribute(String attrname) {
     return _attributes != null ? _attributes[attrname] : null;
@@ -125,7 +127,8 @@ class AbstractModel {
 }
 
 class Agent extends AbstractModel {
-  Agent(String id, Map attributes, [@visibleForTesting String os]) : super(id, attributes, os);
+  Agent(String id, Map attributes, [@visibleForTesting String os])
+      : super(id, attributes, os);
 
   String get displayName {
     if (os() == 'android') {
@@ -136,7 +139,10 @@ class Agent extends AbstractModel {
       return null;
     }
   }
-  bool get isTyping {return attribute('typing'); }
+
+  bool get isTyping {
+    return attribute('typing');
+  }
 
   String get avatarUri {
     if (os() == 'android') {
@@ -148,7 +154,8 @@ class Agent extends AbstractModel {
     }
   }
 
-  static List<Agent> parseAgentsJson(String json, [@visibleForTesting String os]) {
+  static List<Agent> parseAgentsJson(String json,
+      [@visibleForTesting String os]) {
     var out = List<Agent>();
     jsonDecode(json).forEach((key, value) {
       out.add(Agent(key, value, os));
@@ -158,27 +165,52 @@ class Agent extends AbstractModel {
 }
 
 class Attachment extends AbstractModel {
-  Attachment(Map attributes, [@visibleForTesting String os]) : super('', attributes, os);
+  Attachment(Map attributes, [@visibleForTesting String os])
+      : super('', attributes, os);
 
-  String get mimeType { return attribute('mime_type'); }
-  String get name { return attribute('name'); }
-  int get size { return attribute('size'); }
-  String get type { return attribute('type'); }
-  String get url { return attribute('url');}
-  String get thumbnailUrl { return attribute('thumbnail') ?? attribute('thumbnail_url'); }
+  String get mimeType {
+    return attribute('mime_type');
+  }
+
+  String get name {
+    return attribute('name');
+  }
+
+  int get size {
+    return attribute('size');
+  }
+
+  String get type {
+    return attribute('type');
+  }
+
+  String get url {
+    return attribute('url');
+  }
+
+  String get thumbnailUrl {
+    return attribute('thumbnail') ?? attribute('thumbnail_url');
+  }
 }
 
 class ChatOption extends AbstractModel {
   ChatOption(Map attributes) : super('', attributes);
 
-  String get label { return attribute('label'); }
-  bool get selected { return attribute('selected'); }
+  String get label {
+    return attribute('label');
+  }
+
+  bool get selected {
+    return attribute('selected');
+  }
 }
 
 class ChatItem extends AbstractModel {
-  ChatItem(String id, Map attrs, [@visibleForTesting String os]) : super(id, attrs, os);
+  ChatItem(String id, Map attrs, [@visibleForTesting String os])
+      : super(id, attrs, os);
 
-  DateTime get timestamp => DateTime.fromMillisecondsSinceEpoch(attribute('timestamp'), isUtc: false);
+  DateTime get timestamp =>
+      DateTime.fromMillisecondsSinceEpoch(attribute('timestamp'), isUtc: false);
 
   ChatItemType get type => toChatItemType(attribute('type'));
 
@@ -250,7 +282,8 @@ class ChatItem extends AbstractModel {
 
   String get newComment => attribute('new_comment');
 
-  static List<ChatItem> parseChatItemsJsonForAndroid(String json, [@visibleForTesting String os]) {
+  static List<ChatItem> parseChatItemsJsonForAndroid(String json,
+      [@visibleForTesting String os]) {
     var out = List<ChatItem>();
     jsonDecode(json).forEach((key, value) {
       out.add(ChatItem(key, value, os));
@@ -258,7 +291,8 @@ class ChatItem extends AbstractModel {
     return out;
   }
 
-  static List<ChatItem> parseChatItemsJsonForIOS(String json, [@visibleForTesting String os]) {
+  static List<ChatItem> parseChatItemsJsonForIOS(String json,
+      [@visibleForTesting String os]) {
     var out = List<ChatItem>();
     jsonDecode(json).forEach((value) {
       out.add(ChatItem(value['id'], value, os));

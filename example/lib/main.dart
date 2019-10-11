@@ -41,10 +41,14 @@ class _MyAppState extends State<MyApp> {
       platformVersion = 'Failed to get platform version.';
     }
 
-    _chatConnectivitySubscription = _chatApi.onConnectionStatusChanged.listen(_chatConnectivityUpdated);
-    _chatAccountSubscription = _chatApi.onAccountStatusChanged.listen(_chatAccountUpdated);
-    _chatAgentsSubscription = _chatApi.onAgentsChanged.listen(_chatAgentsUpdated);
-    _chatItemsSubscription = _chatApi.onChatItemsChanged.listen(_chatItemsUpdated);
+    _chatConnectivitySubscription =
+        _chatApi.onConnectionStatusChanged.listen(_chatConnectivityUpdated);
+    _chatAccountSubscription =
+        _chatApi.onAccountStatusChanged.listen(_chatAccountUpdated);
+    _chatAgentsSubscription =
+        _chatApi.onAgentsChanged.listen(_chatAgentsUpdated);
+    _chatItemsSubscription =
+        _chatApi.onChatItemsChanged.listen(_chatItemsUpdated);
 
     String chatStatus;
     try {
@@ -101,65 +105,68 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child:  Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text('Running on: $_platformVersion\n'),
-              Text('Chat status: $_chatStatus'),
-              RaisedButton(
-                onPressed: () async {
-                  await _chatApi.startChat('Test Visitor Name',
-                      department:'Card');
-                },
-                child: Text("Start Chat"),
-              ),
-               RaisedButton(
-                onPressed: () async {
-                  await _chatApi.sendMessage('Greeting from Visitor');
-                },
-                child: Text("Send Greeting Message"),
-              ),
-              RaisedButton(
-                onPressed: () async {
-                  final file = await ImagePicker.pickImage(source: ImageSource.gallery);
-                  if (file != null) {
-                    try {
-                      await _chatApi.sendAttachment(file.path);
-                    } on PlatformException catch(e) {
-                      debugPrint('An error occurred: ${e.code}');
-                    }
-                  };
-                },
-                child: Text("Send Attachment"),
-              ),
-              RaisedButton(
-                onPressed: () async {
-                  await _chatApi.sendChatRating(ChatRating.GOOD, comment: 'Good service');
-                },
-                child: Text("Send GOOD Rating"),
-              ),
-              RaisedButton(
-                onPressed: () async {
-                  await _chatApi.sendChatRating(ChatRating.BAD, comment: 'Bad service');
-                },
-                child: Text("Send BAD Rating"),
-              ),
-              RaisedButton(
-                onPressed: () async {
-                  await _chatApi.sendOfflineMessage('Offline Greeting from Visitor');
-                },
-                child: Text("Send Offline Message"),
-              ),
-              RaisedButton(
-                onPressed: () async {
-                  await _chatApi.endChat();
-                },
-                child: Text("EndChat"),
-              ),
-            ],
-          )
-        ),
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text('Running on: $_platformVersion\n'),
+            Text('Chat status: $_chatStatus'),
+            RaisedButton(
+              onPressed: () async {
+                await _chatApi.startChat('Test Visitor Name',
+                    department: 'Card');
+              },
+              child: Text("Start Chat"),
+            ),
+            RaisedButton(
+              onPressed: () async {
+                await _chatApi.sendMessage('Greeting from Visitor');
+              },
+              child: Text("Send Greeting Message"),
+            ),
+            RaisedButton(
+              onPressed: () async {
+                final file =
+                    await ImagePicker.pickImage(source: ImageSource.gallery);
+                if (file != null) {
+                  try {
+                    await _chatApi.sendAttachment(file.path);
+                  } on PlatformException catch (e) {
+                    debugPrint('An error occurred: ${e.code}');
+                  }
+                }
+              },
+              child: Text("Send Attachment"),
+            ),
+            RaisedButton(
+              onPressed: () async {
+                await _chatApi.sendChatRating(ChatRating.GOOD,
+                    comment: 'Good service');
+              },
+              child: Text("Send GOOD Rating"),
+            ),
+            RaisedButton(
+              onPressed: () async {
+                await _chatApi.sendChatRating(ChatRating.BAD,
+                    comment: 'Bad service');
+              },
+              child: Text("Send BAD Rating"),
+            ),
+            RaisedButton(
+              onPressed: () async {
+                await _chatApi
+                    .sendOfflineMessage('Offline Greeting from Visitor');
+              },
+              child: Text("Send Offline Message"),
+            ),
+            RaisedButton(
+              onPressed: () async {
+                await _chatApi.endChat();
+              },
+              child: Text("EndChat"),
+            ),
+          ],
+        )),
       ),
     );
   }

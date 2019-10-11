@@ -4,7 +4,8 @@ import 'package:zendesk_flutter_plugin/zendesk_flutter_plugin.dart';
 import 'package:zendesk_flutter_plugin/chat_models.dart';
 
 void main() {
-  const MethodChannel channel = MethodChannel('plugins.flutter.zendesk_chat_api/calls');
+  const MethodChannel channel =
+      MethodChannel('plugins.flutter.zendesk_chat_api/calls');
 
   setUp(() {
     channel.setMockMethodCallHandler((MethodCall methodCall) async {
@@ -22,8 +23,10 @@ void main() {
 
   group('Model tests', () {
     test('properly converts to ConnectionStatus', () {
-      expect(toConnectionStatus('noConnection'), ConnectionStatus.NO_CONNECTION);
-      expect(toConnectionStatus('NO_CONNECTION'), ConnectionStatus.NO_CONNECTION);
+      expect(
+          toConnectionStatus('noConnection'), ConnectionStatus.NO_CONNECTION);
+      expect(
+          toConnectionStatus('NO_CONNECTION'), ConnectionStatus.NO_CONNECTION);
       expect(toConnectionStatus('closed'), ConnectionStatus.CLOSED);
       expect(toConnectionStatus('CLOSED'), ConnectionStatus.CLOSED);
       expect(toConnectionStatus('disconnected'), ConnectionStatus.DISCONNECTED);
@@ -53,7 +56,8 @@ void main() {
       expect(toChatItemType('chat.msg'), ChatItemType.MESSAGE);
       expect(toChatItemType('chat.systemmsg'), ChatItemType.MESSAGE);
       expect(toChatItemType('chat.triggermsg'), ChatItemType.MESSAGE);
-      expect(toChatItemType('chat.request.rating'), ChatItemType.REQUEST_RATING);
+      expect(
+          toChatItemType('chat.request.rating'), ChatItemType.REQUEST_RATING);
       expect(toChatItemType('chat.rating'), ChatItemType.RATING);
       expect(toChatItemType('chat.comment'), ChatItemType.RATING);
       expect(toChatItemType('other_type'), ChatItemType.UNKNOWN);
@@ -70,7 +74,8 @@ void main() {
     });
 
     test('properly parses Agents json for Android', () {
-      String json = '{"2": {"display_name":"aaaa", "avatar_path":"bbbb", "typing":true}, "1": {"display_name":"cccc", "avatar_path":"dddd", "typing":false}}';
+      String json =
+          '{"2": {"display_name":"aaaa", "avatar_path":"bbbb", "typing":true}, "1": {"display_name":"cccc", "avatar_path":"dddd", "typing":false}}';
       List<Agent> agents = Agent.parseAgentsJson(json, 'android');
 
       expect(2, agents.length);
@@ -87,7 +92,8 @@ void main() {
     });
 
     test('properly parses Agents json for iOS', () {
-      String json = '{"2": {"displayName":"aaaa", "avatarURL":"bbbb", "typing":true}, "1": {"displayName":"cccc", "avatarURL":"dddd", "typing":false}}';
+      String json =
+          '{"2": {"displayName":"aaaa", "avatarURL":"bbbb", "typing":true}, "1": {"displayName":"cccc", "avatarURL":"dddd", "typing":false}}';
       List<Agent> agents = Agent.parseAgentsJson(json, 'ios');
 
       expect(agents.length, 2);
@@ -131,19 +137,19 @@ void main() {
       expect(attachment.selected, true);
     });
 
-
     test('properly parses ChatItems json for Android', () {
       DateTime now = DateTime.now();
-      List<ChatItem> items = ChatItem.parseChatItemsJsonForAndroid('{"1":{"timestamp":${now.millisecondsSinceEpoch}, "type":"chat.msg", "display_name":"aaa", "msg":"bbb", "nick":"ccc", '
-          '"attachment":{"mime_type":"ddd", "name":"eee", "size":1, "type":"fff", "url":"ggg", "thumbnail":"hhh"}, "unverified":true, "failed": false, "options":"yes/no",'
-          '"converted_options":[{"label":"yes", "selected":false},{"label":"no", "selected":true}], "upload_progress":0, "rating":"bad", "new_rating":"good", "new_comment":"comment line"}}',
-        'android'
-      );
+      List<ChatItem> items = ChatItem.parseChatItemsJsonForAndroid(
+          '{"1":{"timestamp":${now.millisecondsSinceEpoch}, "type":"chat.msg", "display_name":"aaa", "msg":"bbb", "nick":"ccc", '
+              '"attachment":{"mime_type":"ddd", "name":"eee", "size":1, "type":"fff", "url":"ggg", "thumbnail":"hhh"}, "unverified":true, "failed": false, "options":"yes/no",'
+              '"converted_options":[{"label":"yes", "selected":false},{"label":"no", "selected":true}], "upload_progress":0, "rating":"bad", "new_rating":"good", "new_comment":"comment line"}}',
+          'android');
 
       expect(items.length, 1);
 
       expect(items[0].id, "1");
-      expect(items[0].timestamp.millisecondsSinceEpoch, now.millisecondsSinceEpoch);
+      expect(items[0].timestamp.millisecondsSinceEpoch,
+          now.millisecondsSinceEpoch);
       expect(items[0].type, ChatItemType.MESSAGE);
       expect(items[0].displayName, 'aaa');
       expect(items[0].message, 'bbb');
@@ -175,16 +181,17 @@ void main() {
 
     test('properly parses ChatItems json for iOS', () {
       DateTime now = DateTime.now();
-      List<ChatItem> items = ChatItem.parseChatItemsJsonForIOS('[{"id":"1", "timestamp":${now.millisecondsSinceEpoch}, "type":"chat.msg", "display_name":"aaa", "msg":"bbb", "nick":"ccc", '
-          '"attachment":{"mime_type":"ddd", "name":"eee", "size":1, "type":"fff", "url":"ggg", "thumbnail_url":"hhh"}, "verified":false, "failed": false, "options":["yes","no"],'
-          '"selectedOptionIndex":1, "upload_progress":0, "rating":"bad", "new_rating":"good", "new_comment":"comment line"}]',
-        'ios'
-      );
+      List<ChatItem> items = ChatItem.parseChatItemsJsonForIOS(
+          '[{"id":"1", "timestamp":${now.millisecondsSinceEpoch}, "type":"chat.msg", "display_name":"aaa", "msg":"bbb", "nick":"ccc", '
+              '"attachment":{"mime_type":"ddd", "name":"eee", "size":1, "type":"fff", "url":"ggg", "thumbnail_url":"hhh"}, "verified":false, "failed": false, "options":["yes","no"],'
+              '"selectedOptionIndex":1, "upload_progress":0, "rating":"bad", "new_rating":"good", "new_comment":"comment line"}]',
+          'ios');
 
       expect(items.length, 1);
 
       expect(items[0].id, "1");
-      expect(items[0].timestamp.millisecondsSinceEpoch, now.millisecondsSinceEpoch);
+      expect(items[0].timestamp.millisecondsSinceEpoch,
+          now.millisecondsSinceEpoch);
       expect(items[0].type, ChatItemType.MESSAGE);
       expect(items[0].displayName, 'aaa');
       expect(items[0].message, 'bbb');

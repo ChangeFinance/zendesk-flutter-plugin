@@ -1,6 +1,6 @@
 name: zendesk_flutter_plugin
 description: A plugin that implements the zendesk/zopim Chat API in flutter method channels for easy usage with a flutter app.
-version: 1.0.2
+version: 1.0.3
 author: ChangeFinance <gabriel@getchange.com>
 homepage: https://github.com/ChangeFinance/zendesk-flutter-plugin
 
@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  package_info: ^0.4.0+6
+  package_info: '>=0.4.0+6 <2.0.0'
 
 dev_dependencies:
   test: ^1.4.0

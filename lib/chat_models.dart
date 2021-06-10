@@ -35,7 +35,7 @@ enum ChatRating {
   UNKNOWN,
 }
 
-ConnectionStatus toConnectionStatus(String value) {
+ConnectionStatus toConnectionStatus(String? value) {
   switch (value) {
     case 'noConnection':
     case 'NO_CONNECTION':
@@ -57,7 +57,7 @@ ConnectionStatus toConnectionStatus(String value) {
   }
 }
 
-AccountStatus toAccountStatus(String value) {
+AccountStatus toAccountStatus(String? value) {
   switch (value) {
     case 'online':
     case 'ONLINE':
@@ -70,7 +70,7 @@ AccountStatus toAccountStatus(String value) {
   }
 }
 
-ChatItemType toChatItemType(String value) {
+ChatItemType toChatItemType(String? value) {
   switch (value) {
     case 'chat.memberjoin':
       return ChatItemType.MEMBER_JOIN;
@@ -90,7 +90,7 @@ ChatItemType toChatItemType(String value) {
   }
 }
 
-ChatRating toChatRating(String value) {
+ChatRating toChatRating(String? value) {
   switch (value) {
     case 'good':
       return ChatRating.GOOD;
@@ -105,8 +105,8 @@ ChatRating toChatRating(String value) {
 
 class AbstractModel {
   final String _id;
-  final Map<String, dynamic> _attributes;
-  final String _os;
+  final Map<String, dynamic>? _attributes;
+  final String? _os;
 
   AbstractModel(this._id, this._attributes, [@visibleForTesting this._os]);
 
@@ -115,7 +115,7 @@ class AbstractModel {
   }
 
   dynamic attribute(String attrname) {
-    return _attributes != null ? _attributes[attrname] : null;
+    return _attributes != null ? _attributes![attrname] : null;
   }
 
   @visibleForTesting
@@ -127,10 +127,10 @@ class AbstractModel {
 }
 
 class Agent extends AbstractModel {
-  Agent(String id, Map attributes, [@visibleForTesting String os])
+  Agent(String id, Map<String, dynamic>? attributes, [@visibleForTesting String? os])
       : super(id, attributes, os);
 
-  String get displayName {
+  String? get displayName {
     if (os() == 'android') {
       return attribute('display_name');
     } else if (os() == 'ios') {
@@ -144,7 +144,7 @@ class Agent extends AbstractModel {
     return attribute('typing');
   }
 
-  String get avatarUri {
+  String? get avatarUri {
     if (os() == 'android') {
       return attribute('avatar_path');
     } else if (os() == 'ios') {
@@ -155,8 +155,8 @@ class Agent extends AbstractModel {
   }
 
   static List<Agent> parseAgentsJson(String json,
-      [@visibleForTesting String os]) {
-    var out = List<Agent>();
+      [@visibleForTesting String? os]) {
+    var out = <Agent>[];
     jsonDecode(json).forEach((key, value) {
       out.add(Agent(key, value, os));
     });
@@ -165,7 +165,7 @@ class Agent extends AbstractModel {
 }
 
 class Attachment extends AbstractModel {
-  Attachment(Map attributes, [@visibleForTesting String os])
+  Attachment(Map<String, dynamic>? attributes, [@visibleForTesting String? os])
       : super('', attributes, os);
 
   String get mimeType {
@@ -194,7 +194,7 @@ class Attachment extends AbstractModel {
 }
 
 class ChatOption extends AbstractModel {
-  ChatOption(Map attributes) : super('', attributes);
+  ChatOption(Map<String, dynamic>? attributes) : super('', attributes);
 
   String get label {
     return attribute('label');
@@ -206,7 +206,7 @@ class ChatOption extends AbstractModel {
 }
 
 class ChatItem extends AbstractModel {
-  ChatItem(String id, Map attrs, [@visibleForTesting String os])
+  ChatItem(String id, Map<String, dynamic>? attrs, [@visibleForTesting String? os])
       : super(id, attrs, os);
 
   DateTime get timestamp =>
@@ -220,16 +220,16 @@ class ChatItem extends AbstractModel {
 
   String get nick => attribute('nick');
 
-  Attachment get attachment {
+  Attachment? get attachment {
     dynamic raw = attribute('attachment');
-    return (raw != null && raw is Map) ? Attachment(raw) : null;
+    return (raw != null && raw is Map) ? Attachment(raw as Map<String, dynamic>) : null;
   }
 
-  bool get unverified {
+  bool? get unverified {
     if (os() == 'android') {
       return attribute('unverified');
     } else if (os() == 'ios') {
-      bool verified = attribute('verified');
+      bool? verified = attribute('verified');
       return verified != null ? !verified : null;
     } else {
       return null;
@@ -238,7 +238,7 @@ class ChatItem extends AbstractModel {
 
   bool get failed => attribute('failed');
 
-  String get options {
+  String? get options {
     var raw = attribute('options');
     if (os() == 'android') {
       return raw;
@@ -249,20 +249,20 @@ class ChatItem extends AbstractModel {
     }
   }
 
-  List<ChatOption> get convertedOptions {
+  List<ChatOption>? get convertedOptions {
     if (os() == 'android') {
-      List<dynamic> raw = attribute('converted_options');
+      List<dynamic>? raw = attribute('converted_options');
       if (raw == null || raw.isEmpty) {
         return null;
       }
       return raw.map((optionAttrs) => ChatOption(optionAttrs)).toList();
     } else if (os() == 'ios') {
-      List<ChatOption> out = List();
+      List<ChatOption> out = <ChatOption>[];
       var labels = attribute('options');
       if (labels != null) {
         int selectedOptionIndex = attribute('selectedOptionIndex') ?? -1;
         for (var i = 0; i < labels.length; i++) {
-          Map optionAttrs = Map<String, dynamic>();
+          Map<String, dynamic> optionAttrs = Map<String, dynamic>();
           optionAttrs['label'] = labels[i];
           optionAttrs['selected'] = (i == selectedOptionIndex);
           out.add(ChatOption(optionAttrs));
@@ -283,8 +283,8 @@ class ChatItem extends AbstractModel {
   String get newComment => attribute('new_comment');
 
   static List<ChatItem> parseChatItemsJsonForAndroid(String json,
-      [@visibleForTesting String os]) {
-    var out = List<ChatItem>();
+      [@visibleForTesting String? os]) {
+    var out = <ChatItem>[];
     jsonDecode(json).forEach((key, value) {
       out.add(ChatItem(key, value, os));
     });
@@ -292,8 +292,8 @@ class ChatItem extends AbstractModel {
   }
 
   static List<ChatItem> parseChatItemsJsonForIOS(String json,
-      [@visibleForTesting String os]) {
-    var out = List<ChatItem>();
+      [@visibleForTesting String? os]) {
+    var out = <ChatItem>[];
     jsonDecode(json).forEach((value) {
       out.add(ChatItem(value['id'], value, os));
     });

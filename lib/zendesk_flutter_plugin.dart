@@ -7,7 +7,7 @@ import 'package:package_info/package_info.dart';
 import 'chat_models.dart';
 
 class ZendeskFlutterPlugin {
-  static ZendeskFlutterPlugin _instance;
+  static ZendeskFlutterPlugin? _instance;
   static const MethodChannel _callsChannel =
       MethodChannel('plugins.flutter.zendesk_chat_api/calls');
   static const EventChannel _connectionStatusEventsChannel =
@@ -19,16 +19,16 @@ class ZendeskFlutterPlugin {
   static const EventChannel _chatItemsEventsChannel =
       EventChannel('plugins.flutter.zendesk_chat_api/chat_items_events');
 
-  Stream<ConnectionStatus> _connectionStatusEventsStream;
-  Stream<AccountStatus> _accountStatusEventsStream;
-  Stream<List<Agent>> _agentEventsStream;
-  Stream<List<ChatItem>> _chatItemsEventsStream;
+  Stream<ConnectionStatus>? _connectionStatusEventsStream;
+  Stream<AccountStatus>? _accountStatusEventsStream;
+  Stream<List<Agent>>? _agentEventsStream;
+  Stream<List<ChatItem>>? _chatItemsEventsStream;
 
   factory ZendeskFlutterPlugin() {
     if (_instance == null) {
       _instance = ZendeskFlutterPlugin._();
     }
-    return _instance;
+    return _instance!;
   }
 
   ZendeskFlutterPlugin._();
@@ -39,7 +39,7 @@ class ZendeskFlutterPlugin {
     return version;
   }
 
-  Future<void> init(String accountKey, {String applicationId}) async {
+  Future<void> init(String accountKey, {String? applicationId}) async {
     if (applicationId == null || applicationId.isEmpty) {
       PackageInfo pi = await PackageInfo.fromPlatform();
       applicationId = '${pi.appName}, v${pi.version}(${pi.buildNumber})';
@@ -52,10 +52,10 @@ class ZendeskFlutterPlugin {
   }
 
   Future<void> startChat(String visitorName,
-      {String visitorEmail,
-      String visitorPhone,
-      String department,
-      List<String> tags}) async {
+      {String? visitorEmail,
+      String? visitorPhone,
+      String? department,
+      List<String>? tags}) async {
     return await _callsChannel.invokeMethod('startChat', <String, dynamic>{
       'visitorName': visitorName,
       'visitorEmail': visitorEmail,
@@ -80,7 +80,7 @@ class ZendeskFlutterPlugin {
     });
   }
 
-  Future<void> sendChatRating(ChatRating chatRating, {String comment}) async {
+  Future<void> sendChatRating(ChatRating chatRating, {String? comment}) async {
     return await _callsChannel.invokeMethod('sendChatRating',
         <String, dynamic>{'rating': chatRating.toString(), 'comment': comment});
   }
@@ -96,7 +96,7 @@ class ZendeskFlutterPlugin {
           .receiveBroadcastStream()
           .map((dynamic event) => toConnectionStatus(event));
     }
-    return _connectionStatusEventsStream;
+    return _connectionStatusEventsStream!;
   }
 
   Stream<AccountStatus> get onAccountStatusChanged {
@@ -105,7 +105,7 @@ class ZendeskFlutterPlugin {
           .receiveBroadcastStream()
           .map((dynamic event) => toAccountStatus(event));
     }
-    return _accountStatusEventsStream;
+    return _accountStatusEventsStream!;
   }
 
   Stream<List<Agent>> get onAgentsChanged {
@@ -114,7 +114,7 @@ class ZendeskFlutterPlugin {
           .receiveBroadcastStream()
           .map((dynamic event) => Agent.parseAgentsJson(event));
     }
-    return _agentEventsStream;
+    return _agentEventsStream!;
   }
 
   Stream<List<ChatItem>> get onChatItemsChanged {
@@ -126,10 +126,10 @@ class ZendeskFlutterPlugin {
         } else if (Platform.isIOS) {
           return ChatItem.parseChatItemsJsonForIOS(event);
         } else {
-          return List<ChatItem>();
+          return <ChatItem>[];
         }
       });
     }
-    return _chatItemsEventsStream;
+    return _chatItemsEventsStream!;
   }
 }

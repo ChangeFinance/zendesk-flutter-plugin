@@ -7,6 +7,8 @@ void main() {
   const MethodChannel channel =
       MethodChannel('plugins.flutter.zendesk_chat_api/calls');
 
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   setUp(() {
     channel.setMockMethodCallHandler((MethodCall methodCall) async {
       return '42';
@@ -110,7 +112,7 @@ void main() {
     });
 
     test('properly converts map to Attachment', () {
-      Map map = Map<String, dynamic>();
+      Map<String, dynamic> map = Map<String, dynamic>();
       map['mime_type'] = 'aaa';
       map['name'] = 'bbb';
       map['size'] = 1;
@@ -128,7 +130,7 @@ void main() {
     });
 
     test('properly converts map to ChatOption', () {
-      Map map = Map<String, dynamic>();
+      Map<String, dynamic> map = Map<String, dynamic>();
       map['label'] = "aaa";
       map['selected'] = true;
 
@@ -162,17 +164,17 @@ void main() {
       expect(items[0].newRating, ChatRating.GOOD);
       expect(items[0].newComment, 'comment line');
 
-      Attachment attachment = items[0].attachment;
+      Attachment? attachment = items[0].attachment;
       expect(attachment != null, true);
-      expect(attachment.mimeType, 'ddd');
+      expect(attachment!.mimeType, 'ddd');
       expect(attachment.name, 'eee');
       expect(attachment.size, 1);
       expect(attachment.type, 'fff');
       expect(attachment.thumbnailUrl, 'hhh');
 
-      List<ChatOption> convertedOptions = items[0].convertedOptions;
+      List<ChatOption>? convertedOptions = items[0].convertedOptions;
       expect(convertedOptions != null, true);
-      expect(convertedOptions.length, 2);
+      expect(convertedOptions!.length, 2);
       expect(convertedOptions[0].label, 'yes');
       expect(convertedOptions[0].selected, false);
       expect(convertedOptions[1].label, 'no');
@@ -204,17 +206,17 @@ void main() {
       expect(items[0].newRating, ChatRating.GOOD);
       expect(items[0].newComment, 'comment line');
 
-      Attachment attachment = items[0].attachment;
+      Attachment? attachment = items[0].attachment;
       expect(attachment != null, true);
-      expect(attachment.mimeType, 'ddd');
+      expect(attachment!.mimeType, 'ddd');
       expect(attachment.name, 'eee');
       expect(attachment.size, 1);
       expect(attachment.type, 'fff');
       expect(attachment.thumbnailUrl, 'hhh');
 
-      List<ChatOption> convertedOptions = items[0].convertedOptions;
+      List<ChatOption>? convertedOptions = items[0].convertedOptions;
       expect(convertedOptions != null, true);
-      expect(convertedOptions.length, 2);
+      expect(convertedOptions!.length, 2);
       expect(convertedOptions[0].label, 'yes');
       expect(convertedOptions[0].selected, false);
       expect(convertedOptions[1].label, 'no');

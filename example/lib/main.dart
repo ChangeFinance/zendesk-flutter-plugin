@@ -135,7 +135,6 @@ class _MyAppState extends State<MyApp> {
                     debugPrint('An error occurred: ${e.code}');
                   }
                 }
-                ;
               },
               child: Text("Send Attachment"),
             ),
